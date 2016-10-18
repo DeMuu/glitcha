@@ -1,0 +1,106 @@
+/* DONE: build glitch text animations by moving the clipped sub elements left and right + changing opacity / color */
+/* TODO: user-select: none cross-browser */
+/* TODO: add styles for 4 line glitch */
+/* TODO: removed absolute values and calculate positioning + heights using JS */
+
+.gl-txt { position:relative; font-size:18px; }
+.gl-txt > * { position:absolute; overflow:hidden; height:6px; line-height: 18px; margin: 0; padding: 0; }
+.gl-txt > *:nth-child(1) { top:0; }
+.gl-txt > *:nth-child(2) { height: 3px; top:6px; }
+.gl-txt > *:nth-child(3) { top:9px; }
+
+.gl-txt > * > span { display: block; height: 100%; }
+.gl-txt > *:nth-child(1) > span { line-height: 18px; }
+.gl-txt > *:nth-child(2) > span { line-height: 6px; }
+.gl-txt > *:nth-child(3) > span { line-height: 0; }
+
+.gl-pos:nth-child(1) > span { line-height: 18px; animation: glitch1 .3s cubic-bezier(.25, .46, .45, .94) both infinite; }
+.gl-pos:nth-child(2) > span { line-height: 6px; animation: glitch2 .3s cubic-bezier(.25, .46, .45, .94) both infinite; }
+.gl-pos:nth-child(3) > span { line-height: 0; animation: glitch3 .3s cubic-bezier(.25, .46, .45, .94) both infinite; }
+
+.gl-opacity:nth-child(1) { animation: opacityGlitch1 .8s reverse infinite; }
+.gl-opacity:nth-child(2) { animation: opacityGlitch1 .3s alternate infinite; }
+.gl-opacity:nth-child(3) { animation: opacityGlitch1 .5s both infinite; }
+
+/* ANIMATIONS */
+@keyframes glitch1 {
+    0% {
+        transform: translateX(0)
+    }
+    20% {
+        transform: translateX(10%)
+    }
+    40% {
+        transform: translateX(-15%)
+    }
+    60% {
+        transform: translateX(5%)
+    }
+    80% {
+        transform: translateX(3%)
+    }
+    to {
+        transform: translateX(0)
+    }
+}
+@keyframes glitch2 {
+    0% {
+        transform: translateX(0)
+    }
+    20% {
+        transform: translateX(5%)
+    }
+    40% {
+        transform: translateX(-25%)
+    }
+    60% {
+        transform: translateX(8%)
+    }
+    80% {
+        transform: translateX(13%)
+    }
+    to {
+        transform: translateX(0)
+    }
+}
+@keyframes glitch3 {
+    0% {
+        transform: translateX(0)
+    }
+    20% {
+        transform: translateX(1%)
+    }
+    40% {
+        transform: translateX(-12%)
+    }
+    60% {
+        transform: translateX(12%)
+    }
+    80% {
+        transform: translateX(8%)
+    }
+    to {
+        transform: translateX(0)
+    }
+}
+
+@keyframes opacityGlitch1 {
+    0% {
+        opacity: 1;
+    }
+    20% {
+        opacity: 0.5
+    }
+    40% {
+        opacity: 0.8
+    }
+    60% {
+        opacity: 0.2
+    }
+    80% {
+        opacity: 0.5
+    }
+    to {
+        opacity: 0.9
+    }
+}
