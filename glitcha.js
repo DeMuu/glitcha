@@ -2,20 +2,14 @@
 // - 1. copy text into 2, 3 or 4 sub elements
 // - 2. add correct classes based on passed params
 
-// TODO: refactor query selector to document.querySelectorAll()
+// DONE: refactor query selector to document.querySelectorAll()
 // TODO: refactor lines, colors and opacity setter functionality so it can work with multiple objects
 // TODO: refactor replaceTags so it matches the inital variable setup style to make the if else obsolete
+// TODO: set correct height + offset values. formula -> top + bottom = elem.height / 2.5; middle = top / 2; offset = sum of preceding heights
 
 function glitchText (elemSelector) {
-	this._selectorType = elemSelector.length > 1 ? elemSelector.substring(0, 1) : '';
-  this._selectorName = this._selectorType !== '' ? elemSelector.substring(1) : elemSelector;
-	this._elem = (this._selectorType === '.' ?
-		      	      document.getElementsByClassName(this._selectorName) : (
-				            this._selectorType === '#' ?
-                  	  document.getElementById(this._selectorName) :
-                      document.getElementsByTagName(this._selectorName)
-                  )
-                );
+	this._elem = document.querySelectorAll(elemSelector);
+  this._selectorType;
   this._glitchLines;
   this._glitchOpacity;
   this._glitchColors;
@@ -26,19 +20,13 @@ function glitchText (elemSelector) {
   this.replaceTags = function () {
     let _copies = [];
     let _elemParent = [];
+    const len = this._elem.length;
+    
+    for (let i = 0; i < len; i++) {
+      const curr = this._elem[i];
+      _copies[i] = this.getSetupCopies(curr, this._glitchLines);
 
-    if (this._selectorType !== '#') {
-      const len = this._elem.length;
-      for (let i = 0; i < len; i++) {
-        const curr = this._elem[i];
-        _copies[i] = this.getSetupCopies(curr, this._glitchLines);
-
-        _elemParent[i] = curr;
-      }
-    }
-    else {
-    	_elemParent[0] = this._elem;
-      _copies[0] = this.getSetupCopies(_elemParent[0], this._glitchLines);
+      _elemParent[i] = curr;
     }
 
     for (let i = 0, len = _elemParent.length; i < len; i++) {
@@ -53,7 +41,7 @@ function glitchText (elemSelector) {
         width: _compStyles.getPropertyValue('width')
       };
       
-      newParent.className = 'gl-txt';
+      newParent.className = 'gl-fx';
       newParent.style.height = styles.height;
       newParent.style.width = styles.width;
       newParent.style.border = styles.border;
@@ -81,13 +69,32 @@ function glitchText (elemSelector) {
   this.insertCopies = function (elem, copyMarkup) {
   	const len = copyMarkup.length;
   	for (let i = 0; i < len; i++) {
+      this._selectorType = this._elem[i].tagName.toLowerCase();
     	for (let j = 0; j < copyMarkup[i].length; j++) {
       	const currCopy = copyMarkup[i][j];
         const currTag = ['<' + currCopy.tagName + '><span>', '</span></' + currCopy.tagName + '>'];
-        elem.innerHTML += currTag[0] + currCopy.innerHTML + currTag[1];
+
+        if (this._selectorType !== 'img') {
+          elem.innerHTML += currTag[0] + currCopy.innerHTML + currTag[1];
+        }
+        else {
+          elem.innerHTML += '<span><img src="' + currCopy.getAttribute('src') + '" class="' + currCopy.getAttribute('class') + '" /></span>';
+        }
+
+        // set height here
       	
-        if (this._glitchDelay[j] !== undefined) {
-        	elem.childNodes[j].childNodes[0].style.animationDelay = this._glitchDelay[j] + 's';
+        if (this._glitchDelay[j] !== 0) {
+          const elemChild = elem.childNodes[j];
+          let childToUse;
+
+          if (elemChild.childNodes.length > 0) {
+            childToUse = elemChild.childNodes[0];
+          }
+        	else {
+            childToUse = elemChild;
+          }
+
+          childToUse.style.animationDelay = this._glitchDelay[j] + 's';
         }
         
         this.setGlitchParams(elem.childNodes[j]);
@@ -119,7 +126,7 @@ function glitchText (elemSelector) {
     this._glitchOpacity = JSON.parse(curr.getAttribute('data-glitch-opacity'));
     this._glitchColors = JSON.parse(curr.getAttribute('data-glitch-colors'));
     this._glitchPosition = JSON.parse(curr.getAttribute('data-glitch-position'));
-  	this._glitchDelay = curr.getAttribute('data-glitch-delay').replace(' ', '').split(',');
+  	this._glitchDelay = curr.getAttribute('data-glitch-delay') !== null ? curr.getAttribute('data-glitch-delay').replace(' ', '').split(',') : [0];
   
   	// default the number of lines to glitch to 3 if there's no or an invalid number set
     if (this._glitchLines !== 3 || this._glitchLines !== 4) {

@@ -7,12 +7,16 @@
     <meta name="description" content="A demo of the glitcha.js text transformator plugin">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>glitcha.js Demo</title>
+    <link rel="stylesheet" type="text/css" href="glitcha.css" />
+    <script type="text/javascript" src="glitcha.js"></script>
   </head>
   <body>
     <p class="glitch-text" data-glitch-lines="3" data-glitch-position="false" data-glitch-opacity="true"  data-glitch-colors="false" data-glitch-delay="0.3, 0.5, 0.1">Test text</p>
+    <img src="https://dummyimage.com/600x400/000/fff" class="glitchImage" data-glitch-position="true" />
 
     <script type="text/javascript">
-      glitchText('.glitch-text');
+      // glitchText('.glitch-text');
+      glitchText('.glitchImage');
     </script>
   </body>
 </html>
