@@ -7,9 +7,15 @@
 // TODO: refactor replaceTags so it matches the inital variable setup style to make the if else obsolete
 
 function glitchText (elemSelector) {
-	this._selectorType = elemSelector.substring(0, 1);
-  this._selectorName = elemSelector.substring(1);
-	this._elem = (this._selectorType === '.' ? document.getElementsByClassName(this._selectorName) : (this._selectorType === '#') ? document.getElementById(this._selectorName) : document.getElementsByTagName(this._selectorName)); document.getElementsByClassName(elemSelector);
+	this._selectorType = elemSelector.length > 1 ? elemSelector.substring(0, 1) : '';
+  this._selectorName = this._selectorType !== '' ? elemSelector.substring(1) : elemSelector;
+	this._elem = (this._selectorType === '.' ?
+		      	      document.getElementsByClassName(this._selectorName) : (
+				            this._selectorType === '#' ?
+                  	  document.getElementById(this._selectorName) :
+                      document.getElementsByTagName(this._selectorName)
+                  )
+                );
   this._glitchLines;
   this._glitchOpacity;
   this._glitchColors;
@@ -21,7 +27,7 @@ function glitchText (elemSelector) {
     let _copies = [];
     let _elemParent = [];
 
-    if (this._selectorType === '.') {
+    if (this._selectorType !== '#') {
       const len = this._elem.length;
       for (let i = 0; i < len; i++) {
         const curr = this._elem[i];
@@ -31,9 +37,8 @@ function glitchText (elemSelector) {
       }
     }
     else {
-      _copies = this.getSetupCopies(this._elem, this._glitchLines);
-
-      _elemParent = this._elem;
+    	_elemParent[0] = this._elem;
+      _copies[0] = this.getSetupCopies(_elemParent[0], this._glitchLines);
     }
 
     for (let i = 0, len = _elemParent.length; i < len; i++) {
@@ -102,9 +107,13 @@ function glitchText (elemSelector) {
     }
   }
   
-  const len = (this._elem.length === undefined ? [this._elem].length : this._elem.length);
+  const len = (this._elem.length === undefined ? 1 : this._elem.length);
+  
+  if (len === 1) {
+  	this._elem[0] = this._elem;
+  }
+  
   for (let i = 0, curr = this._elem[i]; i < len; i++) {
-  	console.log(curr);
   	// set the properties
     this._glitchLines = JSON.parse(curr.getAttribute('data-glitch-lines'));
     this._glitchOpacity = JSON.parse(curr.getAttribute('data-glitch-opacity'));
@@ -124,5 +133,5 @@ function glitchText (elemSelector) {
 
     // kick off the glitch
     this.replaceTags();
-    }
+  }
 };
