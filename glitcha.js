@@ -6,9 +6,9 @@
 // TODO: refactor lines, colors and opacity setter functionality so it can work with multiple objects
 // TODO: refactor replaceTags so it matches the inital variable setup style to make the if else obsolete
 // DONE: set correct height + offset values. formula -> top + bottom = elem.height / 2.5; middle = top / 2; offset = sum of preceding heights
-// TODO: make texts work again with calculating the correct line-height for each line
+// DONE: make texts work again with calculating the correct line-height for each line
 
-glitchText = function (elemSelector) {
+glitchFX = function (elemSelector) {
   window.onload = function onload () {
     this._elem = document.querySelectorAll(elemSelector);
     this._selectorType;
@@ -90,8 +90,12 @@ glitchText = function (elemSelector) {
        
           const elemChild = elem.childNodes[j];
           let childToUse;
+          let heightToSet = 0;
+          let topOffsetBaseElement;
 
-          if (elemChild.tagName.toLowerCase() !== 'span' && elemChild.childNodes.length > 0) {
+          // if the base is an image we don't wrap the content inside the original tag but instead wrap the image in span tags
+          // if the child is not a span we manipulate it otherwise we manipulate the element directly
+          if (elemChild.tagName.toLowerCase() !== 'span') {
             childToUse = elemChild.childNodes[0];
           }
           else {
@@ -100,13 +104,30 @@ glitchText = function (elemSelector) {
             doOffsetPos = true;
           }
 
+          heightToSet = parseFloat(divFactor === 2.5 ? this._elemStyles.height : elemChild.parentNode.childNodes[0].style.height) / divFactor;
+
           if (doOffsetPos) {
             childToUse.childNodes[0].style.top = -sumTopOffset + 'px';
+            childToUse.style.top = sumTopOffset + 'px';
+            childToUse.style.height = heightToSet + 'px';
+            topOffsetBaseElement = childToUse;
           }
+          else {
+            childToUse.parentNode.style.top = sumTopOffset + 'px';
+            childToUse.parentNode.style.height = heightToSet + 'px';
+            topOffsetBaseElement = childToUse.parentNode;
 
-          childToUse.style.top = sumTopOffset + 'px';
-          childToUse.style.height = parseFloat(divFactor === 2.5 ? this._elemStyles.height : elem.childNodes[0].style.height) / divFactor + 'px';
-          sumTopOffset += parseFloat(childToUse.style.height);
+            const containsHTMLCheck = childToUse.innerHTML.indexOf('<')
+
+            if (containsHTMLCheck > -1 && containsHTMLCheck === 0) {
+
+            }
+            else {
+              childToUse.style.lineHeight = (divFactor === 2.5 ? (j === 0 ? parseFloat(elem.style.height) + 2 : 0) : parseFloat(elemChild.parentNode.childNodes[0].style.height)) + 'px';
+            }
+          }
+          
+          sumTopOffset += parseFloat(topOffsetBaseElement.style.height);
 
           if (this._glitchDelay[j] !== 0) {
             childToUse.style.animationDelay = this._glitchDelay[j] + 's';
