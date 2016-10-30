@@ -5,14 +5,8 @@
 
 .gl-fx { position:relative; }
 .gl-fx > * { position:absolute; overflow:hidden; margin: 0; padding: 0; }
-/*.gl-fx > *:nth-child(1) { top:0; }
-.gl-fx > *:nth-child(2) { height: 3px; top:6px; }
-.gl-fx > *:nth-child(3) { top:9px; }*/
 
 .gl-fx > * > span { display: block; height: 100%; }
-/*.gl-fx > *:nth-child(1) > span { line-height: 18px; }
-.gl-fx > *:nth-child(2) > span { line-height: 6px; }
-.gl-fx > *:nth-child(3) > span { line-height: 0; }*/
 
 .gl-fx > span { width: 100%; }
 .gl-fx > span > img { position: absolute; top: 0; left: 0; }
