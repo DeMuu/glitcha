@@ -7,6 +7,7 @@
 // TODO: refactor replaceTags so it matches the inital variable setup style to make the if else obsolete
 // DONE: set correct height + offset values. formula -> top + bottom = elem.height / 2.5; middle = top / 2; offset = sum of preceding heights
 // DONE: make texts work again with calculating the correct line-height for each line
+// TODO: make image glitching a bit more entertaining. similar to this -> http://codepen.io/pwsm50/pen/rrgwjN
 
 glitchFX = function (elemSelector) {
   window.onload = function onload () {
